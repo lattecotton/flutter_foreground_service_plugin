@@ -131,9 +131,15 @@ public class FlutterForegroundPlugin implements FlutterPlugin, MethodCallHandler
         intent.putExtra("stop_icon", stopIcon);
         intent.putExtra("stop_text", stopText);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            // Android 14 (API 34) and above
+            intent.putExtra("serviceType", ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
+            context.startForegroundService(intent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Android 8.0 (API 26) to Android 13
             context.startForegroundService(intent);
         } else {
+            // Below Android 8.0
             context.startService(intent);
         }
 
